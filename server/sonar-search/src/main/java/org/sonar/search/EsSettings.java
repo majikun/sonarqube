@@ -20,6 +20,8 @@
 package org.sonar.search;
 
 import java.io.File;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -107,17 +109,17 @@ public class EsSettings implements EsSettingsMBean {
     builder.put("path.logs", logDir.getAbsolutePath());
   }
 
-  private void configureNetwork(Settings.Builder builder) {
+  private void configureNetwork(Settings.Builder builder) throws UnknownHostException {
     // the following properties can't be null as default values are defined by app process
-    String host = "127.0.0.1";// props.nonNullValue(ProcessProperties.SEARCH_HOST);
+    InetAddress host = InetAddress.getByName(props.nonNullValue(ProcessProperties.SEARCH_HOST));
     int port = Integer.parseInt(props.nonNullValue(ProcessProperties.SEARCH_PORT));
     LOGGER.info("Elasticsearch listening on {}:{}", host, port);
 
     // disable multicast
     builder.put("discovery.zen.ping.multicast.enabled", "false");
     builder.put("transport.tcp.port", port);
-    builder.put("transport.host", host);
-    builder.put("network.host", host);
+    builder.put("transport.host", host.getHostAddress());
+    builder.put("network.host", host.getHostAddress());
 
     // Elasticsearch sets the default value of TCP reuse address to true only on non-MSWindows machines, but why ?
     builder.put("network.tcp.reuse_address", true);
@@ -132,7 +134,7 @@ public class EsSettings implements EsSettingsMBean {
       // see https://github.com/lmenezes/elasticsearch-kopf/issues/195
       builder.put("http.cors.enabled", true);
       builder.put("http.enabled", true);
-      builder.put("http.host", host);
+      builder.put("http.host", host.getHostAddress());
       builder.put("http.port", httpPort);
     }
   }
