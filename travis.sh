@@ -57,7 +57,7 @@ CI)
     set_maven_build_version $TRAVIS_BUILD_NUMBER
     export MAVEN_OPTS="-Xmx1G -Xms128m"
     mvn org.jacoco:jacoco-maven-plugin:prepare-agent deploy sonar:sonar \
-        -Pdeploy-sonarsource \
+        -Pdeploy-sonarsource,release \
         -Dsonar.analysis.mode=issues \
         -Dsonar.github.pullRequest=$TRAVIS_PULL_REQUEST \
         -Dsonar.github.repository=$TRAVIS_REPO_SLUG \
