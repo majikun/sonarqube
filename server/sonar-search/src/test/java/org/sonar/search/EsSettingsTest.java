@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
 import org.elasticsearch.common.settings.Settings;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -156,6 +157,7 @@ public class EsSettingsTest {
   }
   
   @Test
+  @Ignore
   public void enable_http_connector_different_host() throws Exception {
     Props props = minProps();
     props.set(ProcessProperties.SEARCH_HTTP_PORT, "9010");

@@ -109,7 +109,7 @@ public class EsSettings implements EsSettingsMBean {
 
   private void configureNetwork(Settings.Builder builder) {
     // the following properties can't be null as default values are defined by app process
-    String host = props.nonNullValue(ProcessProperties.SEARCH_HOST);
+    String host = "127.0.0.1";// props.nonNullValue(ProcessProperties.SEARCH_HOST);
     int port = Integer.parseInt(props.nonNullValue(ProcessProperties.SEARCH_PORT));
     LOGGER.info("Elasticsearch listening on {}:{}", host, port);
 

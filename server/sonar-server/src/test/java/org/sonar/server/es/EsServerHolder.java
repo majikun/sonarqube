@@ -20,6 +20,7 @@
 package org.sonar.server.es;
 
 import java.io.File;
+import java.net.InetAddress;
 import java.util.Properties;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexResponse;
 import org.elasticsearch.client.transport.TransportClient;
@@ -77,12 +78,12 @@ public class EsServerHolder {
   }
 
   private void reset() {
+    InetAddress localhost = LoopbackAddress.get();
     TransportClient client = TransportClient.builder().settings(Settings.builder()
       .put("node.name", nodeName)
-      .put("network.bind_host", "localhost")
       .put("cluster.name", clusterName)
       .build()).build();
-    client.addTransportAddress(new InetSocketTransportAddress(LoopbackAddress.get(), port));
+    client.addTransportAddress(new InetSocketTransportAddress(localhost, port));
 
     // wait for node to be ready
     client.admin().cluster().prepareHealth()
