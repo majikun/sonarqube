@@ -109,9 +109,9 @@ public class EsSettings implements EsSettingsMBean {
     builder.put("path.logs", logDir.getAbsolutePath());
   }
 
-  private void configureNetwork(Settings.Builder builder) throws UnknownHostException {
+  private void configureNetwork(Settings.Builder builder) {
     // the following properties can't be null as default values are defined by app process
-    InetAddress host = InetAddress.getByName(props.nonNullValue(ProcessProperties.SEARCH_HOST));
+    InetAddress host = hostAddress();
     int port = Integer.parseInt(props.nonNullValue(ProcessProperties.SEARCH_PORT));
     LOGGER.info("Elasticsearch listening on {}:{}", host, port);
 
@@ -136,6 +136,15 @@ public class EsSettings implements EsSettingsMBean {
       builder.put("http.enabled", true);
       builder.put("http.host", host.getHostAddress());
       builder.put("http.port", httpPort);
+    }
+  }
+
+  private InetAddress hostAddress() {
+    String host = props.nonNullValue(ProcessProperties.SEARCH_HOST);
+    try {
+      return InetAddress.getByName(host);
+    } catch (UnknownHostException e) {
+      throw new IllegalStateException("Can not resolve host [" + host + "]", e);
     }
   }
 

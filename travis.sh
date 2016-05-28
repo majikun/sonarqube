@@ -56,15 +56,17 @@ CI)
     CURRENT_VERSION=`maven_expression "project.version"`
     set_maven_build_version $TRAVIS_BUILD_NUMBER
     export MAVEN_OPTS="-Xmx1G -Xms128m"
-    mvn org.jacoco:jacoco-maven-plugin:prepare-agent deploy sonar:sonar \
-        -Pdeploy-sonarsource,release \
-        -Dsonar.analysis.mode=issues \
-        -Dsonar.github.pullRequest=$TRAVIS_PULL_REQUEST \
-        -Dsonar.github.repository=$TRAVIS_REPO_SLUG \
-        -Dsonar.github.oauth=$GITHUB_TOKEN \
-        -Dsonar.host.url=$SONAR_HOST_URL \
-        -Dsonar.login=$SONAR_TOKEN \
-        -B -e -V
+    mvn deploy -DskipTests -Pdeploy-sonarsource -B -e
+
+    #mvn org.jacoco:jacoco-maven-plugin:prepare-agent deploy sonar:sonar \
+    #    -Pdeploy-sonarsource,release \
+    #    -Dsonar.analysis.mode=issues \
+    #    -Dsonar.github.pullRequest=$TRAVIS_PULL_REQUEST \
+    #    -Dsonar.github.repository=$TRAVIS_REPO_SLUG \
+    #    -Dsonar.github.oauth=$GITHUB_TOKEN \
+    #    -Dsonar.host.url=$SONAR_HOST_URL \
+    #    -Dsonar.login=$SONAR_TOKEN \
+    #    -B -e -V
 
   else
     strongEcho 'Build, no analysis, no deploy'
